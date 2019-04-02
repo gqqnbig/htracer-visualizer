@@ -1,4 +1,5 @@
-#! /usr/local/bin/python3
+#! /usr/bin/env python3
+# /usr/bin/evn is a program, it searches the location of python3 and calls it.
 
 import sys
 
