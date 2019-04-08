@@ -27,6 +27,17 @@ if __name__ == '__main__':
     if pruneFiles:
         argv.remove("--prune")
 
+    customTitle = None
+    if "--title" in argv:
+        i = argv.index("--title")
+        if i + 1 < len(argv):
+            customTitle = argv[i + 1]
+        else:
+            print("--title is not followed by a value.")
+            sys.exit(1)
+        del argv[i]
+        del argv[i]
+
     if len(argv) == 2:
         for file in os.listdir(argv[1]):
             if re.search("-\\d+-heap.csv$", file):
@@ -64,6 +75,9 @@ if __name__ == '__main__':
         print("--prune removes unnecessary files in the folder.")
         sys.exit(0)
 
+    if customTitle is None :
+        customTitle = "pid=" + str(pid)
+
     heap_csv = pd.read_csv(heapFileName)
     heap_tshres = heap_csv.tshres
     heap_heap_num_bytes_allocated = heap_csv.heap_num_bytes_allocated
@@ -89,7 +103,7 @@ if __name__ == '__main__':
                     {'x': gc_tshres, 'y': gc_gc_bytes_freed, 'type': 'bar', 'name': 'gc size'},
                 ],
                 'layout': {
-                    'title': f'heap gc, pid={pid}',
+                    'title': 'heap gc, ' + customTitle,
                 }
             }
         ),
@@ -101,7 +115,7 @@ if __name__ == '__main__':
                     {'x': mem_tshres, 'y': mem_iput, 'type': 'lines', 'name': 'write'},
                 ],
                 'layout': {
-                    'title': f'memory access, pid={pid}',
+                    'title': f'memory access, ' + customTitle,
                 }
             }
         )
