@@ -22,19 +22,26 @@ if __name__ == '__main__':
     gcFileName = ''
     memFileName = ''
 
-    if len(sys.argv) == 2:
-        for file in os.listdir(sys.argv[1]):
+    argv=sys.argv[:]
+    pruneFiles="--prune" in argv
+    if pruneFiles:
+        argv.remove("--prune")
+
+    if len(argv) == 2:
+        for file in os.listdir(argv[1]):
             if re.search("-\\d+-heap.csv$", file):
-                heapFileName = os.path.join(sys.argv[1], file)
+                heapFileName = os.path.join(argv[1], file)
             elif re.search("-\\d+-gc.csv$", file):
-                gcFileName = os.path.join(sys.argv[1], file)
+                gcFileName = os.path.join(argv[1], file)
             elif re.search("-\\d+-mem.csv$", file):
-                memFileName = os.path.join(sys.argv[1], file)
+                memFileName = os.path.join(argv[1], file)
+            elif pruneFiles:
+                os.remove(os.path.join(argv[1], file))
 
         pid = re.search("-(\\d)+-heap.csv$", heapFileName).group(1)
-    elif len(sys.argv) == 3:
-        log_path = sys.argv[1]
-        pid = int(sys.argv[2])
+    elif len(argv) == 3:
+        log_path = argv[1]
+        pid = int(argv[2])
 
         heapFileName = log_path + f'-{pid}-heap.csv'
         gcFileName = log_path + f'-{pid}-gc.csv'
@@ -51,6 +58,10 @@ if __name__ == '__main__':
         lg.mem_csv(log_path + '-mem', memFileName, pid)
     else:
         print("Incorrect number of parameters.")
+        print("profiler.py [--prune] folder")
+        print("profiler.py trace-file pid")
+        print("")
+        print("--prune removes unnecessary files in the folder.")
         sys.exit(0)
 
     heap_csv = pd.read_csv(heapFileName)
