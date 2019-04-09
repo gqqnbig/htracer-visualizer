@@ -49,12 +49,11 @@ def __csv_gen(in_path, out_path, pid, fields, processor):
     out = open(out_path, 'w')
     out.write(','.join(fields) + '\n')
     if pid not in info:
-        raise ValueError(f"There is no record for pid {pid} in the file.")
-
-
-    for item in info[pid]:
-        out_line = ','.join([str(item[field]) for field in fields])
-        out.write(out_line + '\n')
+        print(f"There is no record for pid {pid} in the file {in_path}.")
+    else:
+        for item in info[pid]:
+            out_line = ','.join([str(item[field]) for field in fields])
+            out.write(out_line + '\n')
 
 
 def clean(in_path, out_path):
