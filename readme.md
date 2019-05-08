@@ -16,7 +16,7 @@ The basic use case of this profiler is:
 
 ```shell
 > rogcat -f json -o <trace_file_path>
-> ./profiler <trace-file-path> <pid>
+> ./profiler.py <trace-file-path> <pid>
 ```
 
 ## QA
